@@ -1,0 +1,113 @@
+{
+  "brand": "Braver Mondays",
+  "origin": "https://eva456464.github.io",
+  "reviewMode": true,
+  "businessEmail": "",
+  "legalBusinessName": "",
+  "metaPixelId": "",
+  "products": [
+    {
+      "id": "difficult-conversations",
+      "title": "Prepare Your Next Difficult Conversation",
+      "category": "Communication",
+      "status": "preview",
+      "description": "Find your opening, make room for another perspective and agree a next step.",
+      "price": 29,
+      "currency": "USD",
+      "duration": "About 60 minutes",
+      "checkoutUrl": "",
+      "path": "/braver-mondays/workshops/difficult-conversations/",
+      "image": "/braver-mondays/assets/workbook-01.webp",
+      "workbookPages": 20,
+      "guidePages": 11,
+      "checkoutHeading": "Your conversation starts here.",
+      "samplePdf": "/braver-mondays/assets/difficult-conversation-sample.pdf",
+      "samples": [
+        {
+          "image": "/braver-mondays/assets/workbook-04.webp",
+          "title": "1 of 3 \u00b7 Separate facts from assumptions",
+          "alt": "Separate facts from assumptions"
+        },
+        {
+          "image": "/braver-mondays/assets/workbook-08.webp",
+          "title": "2 of 3 \u00b7 Build your opening in four parts",
+          "alt": "Build your opening in four parts"
+        },
+        {
+          "image": "/braver-mondays/assets/workbook-15.webp",
+          "title": "3 of 3 \u00b7 Your one-page conversation plan",
+          "alt": "Your one-page conversation plan"
+        }
+      ]
+    },
+    {
+      "id": "workweek",
+      "title": "Plan a More Manageable Workweek",
+      "category": "Workload",
+      "status": "preview",
+      "description": "See what fits, agree what changes and start the week with a realistic plan.",
+      "price": 29,
+      "currency": "USD",
+      "duration": "About 60 minutes",
+      "checkoutUrl": "",
+      "path": "/braver-mondays/workshops/manageable-workweek/",
+      "image": "/braver-mondays/assets/workweek-01.webp",
+      "workbookPages": 24,
+      "guidePages": 12,
+      "checkoutHeading": "Make room for your next week.",
+      "samplePdf": "/braver-mondays/assets/manageable-workweek-sample.pdf",
+      "samples": [
+        {
+          "image": "/braver-mondays/assets/workweek-05.webp",
+          "title": "1 of 3 \u00b7 Find your real capacity",
+          "alt": "Find your real capacity"
+        },
+        {
+          "image": "/braver-mondays/assets/workweek-15.webp",
+          "title": "2 of 3 \u00b7 Draft your workload discussion",
+          "alt": "Draft your workload discussion"
+        },
+        {
+          "image": "/braver-mondays/assets/workweek-23.webp",
+          "title": "3 of 3 \u00b7 Your one-page weekly plan",
+          "alt": "Your one-page weekly plan"
+        }
+      ]
+    },
+    {
+      "id": "delegation",
+      "title": "Delegate Without Taking It All Back",
+      "category": "Delegation",
+      "status": "preview",
+      "description": "Agree the result, decision boundaries and check-ins so someone else can own the next step.",
+      "price": 29,
+      "currency": "USD",
+      "duration": "About 60 minutes",
+      "checkoutUrl": "",
+      "path": "/braver-mondays/workshops/delegation/",
+      "image": "/braver-mondays/assets/delegation-01.webp",
+      "workbookPages": 20,
+      "guidePages": 10,
+      "checkoutHeading": "Your clearer hand-off starts here.",
+      "samplePdf": "/braver-mondays/assets/delegation-sample.pdf",
+      "samples": [
+        {
+          "image": "/braver-mondays/assets/delegation-07.webp",
+          "title": "1 of 3 \u00b7 Make decision boundaries visible",
+          "alt": "Make decision boundaries visible"
+        },
+        {
+          "image": "/braver-mondays/assets/delegation-18.webp",
+          "title": "2 of 3 \u00b7 Your one-page delegation brief",
+          "alt": "Your one-page delegation brief"
+        },
+        {
+          "image": "/braver-mondays/assets/delegation-19.webp",
+          "title": "3 of 3 \u00b7 Your check-in and ownership plan",
+          "alt": "Your check-in and ownership plan"
+        }
+      ]
+    }
+  ],
+  "tagline": "Lead with clarity. Work with care."
+}
