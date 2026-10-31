@@ -16,7 +16,7 @@
   $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
   $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const b=d.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)d.close();}}));
   function showSample(){const s=samples[sampleIndex];$('#sample-image').src=s.image;$('#sample-image').alt=s.alt;$('#sample-caption').textContent=s.title;}
-  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>{const trigger=document.createElement('button');trigger.dataset.emailSample=document.body.dataset.productId;trigger.hidden=true;document.body.append(trigger);trigger.click();trigger.remove();}));
+  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>{const trigger=document.createElement('button');trigger.dataset.emailSample=b.closest('#checkout-dialog')&&checkoutProduct()?.id!=='bundle'?(checkoutProduct()?.id||document.body.dataset.productId):document.body.dataset.productId;trigger.hidden=true;document.body.append(trigger);trigger.click();trigger.remove();}));
   $('#sample-prev').addEventListener('click',()=>{sampleIndex=(sampleIndex+samples.length-1)%samples.length;showSample();});
   $('#sample-next').addEventListener('click',()=>{sampleIndex=(sampleIndex+1)%samples.length;showSample();});
   $('#sample-dialog').addEventListener('keydown',e=>{if(e.key==='ArrowRight'){$('#sample-next').click();e.preventDefault();}if(e.key==='ArrowLeft'){$('#sample-prev').click();e.preventDefault();}});
