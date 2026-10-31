@@ -10,9 +10,9 @@
       "id": "difficult-conversations",
       "title": "Prepare Your Next Difficult Conversation",
       "category": "Communication",
-      "status": "preview",
+      "status": "preorder",
       "description": "Find your opening, make room for another perspective and agree a next step.",
-      "price": 29,
+      "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
       "checkoutUrl": "",
@@ -38,15 +38,16 @@
           "title": "3 of 3 \u00b7 Your one-page conversation plan",
           "alt": "Your one-page conversation plan"
         }
-      ]
+      ],
+      "standardPrice": 29
     },
     {
       "id": "workweek",
       "title": "Plan a More Manageable Workweek",
       "category": "Workload",
-      "status": "preview",
+      "status": "preorder",
       "description": "See what fits, agree what changes and start the week with a realistic plan.",
-      "price": 29,
+      "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
       "checkoutUrl": "",
@@ -72,15 +73,16 @@
           "title": "3 of 3 \u00b7 Your one-page weekly plan",
           "alt": "Your one-page weekly plan"
         }
-      ]
+      ],
+      "standardPrice": 29
     },
     {
       "id": "delegation",
       "title": "Delegate Without Taking It All Back",
       "category": "Delegation",
-      "status": "preview",
+      "status": "preorder",
       "description": "Agree the result, decision boundaries and check-ins so someone else can own the next step.",
-      "price": 29,
+      "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
       "checkoutUrl": "",
@@ -106,8 +108,21 @@
           "title": "3 of 3 \u00b7 Your check-in and ownership plan",
           "alt": "Your check-in and ownership plan"
         }
-      ]
+      ],
+      "standardPrice": 29
     }
   ],
-  "tagline": "Lead with clarity. Work with care."
+  "tagline": "Lead with clarity. Work with care.",
+  "launchDeliveryDate": "",
+  "sampleSignupEndpoint": "",
+  "testimonials": [],
+  "bundle": {
+    "id": "bundle",
+    "title": "All three workshops",
+    "price": 59,
+    "standardPrice": 87,
+    "currency": "USD",
+    "checkoutUrl": "",
+    "image": "/braver-mondays/assets/workbook-01.webp"
+  }
 }
