@@ -4,7 +4,7 @@
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const samples = JSON.parse($('#sample-data').textContent);
   const currentProduct = () => config?.products?.find(p=>p.id===document.body.dataset.productId);
-  let sampleIndex=0, config=null, pixelReady=false, pageTracked=false, selectedCheckout=null, selectedSample=null;
+  let sampleIndex=0, config=null, pixelReady=false, pageTracked=false, selectedIntent='sample', selectedTopic=null;
   let consent=null;
   try {const c=JSON.parse(localStorage.getItem('bravermondays_consent_v1') || localStorage.getItem('firstlead_consent_v1'));if(c && ['granted','denied'].includes(c.value) && Date.now()-c.at<180*86400000)consent=c.value;} catch {}
   const escape = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -16,7 +16,7 @@
   $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
   $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const b=d.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)d.close();}}));
   function showSample(){const s=samples[sampleIndex];$('#sample-image').src=s.image;$('#sample-image').alt=s.alt;$('#sample-caption').textContent=s.title;}
-  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>{const trigger=document.createElement('button');trigger.dataset.emailSample=b.closest('#checkout-dialog')&&checkoutProduct()?.id!=='bundle'?(checkoutProduct()?.id||document.body.dataset.productId):document.body.dataset.productId;trigger.hidden=true;document.body.append(trigger);trigger.click();trigger.remove();}));
+  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>openSignup('sample',document.body.dataset.productId)));
   $('#sample-prev').addEventListener('click',()=>{sampleIndex=(sampleIndex+samples.length-1)%samples.length;showSample();});
   $('#sample-next').addEventListener('click',()=>{sampleIndex=(sampleIndex+1)%samples.length;showSample();});
   $('#sample-dialog').addEventListener('keydown',e=>{if(e.key==='ArrowRight'){$('#sample-next').click();e.preventDefault();}if(e.key==='ArrowLeft'){$('#sample-prev').click();e.preventDefault();}});
@@ -47,30 +47,28 @@
   moments.forEach((b,i)=>b.addEventListener('click',()=>activateMoment(i)));
   keyboardTabs(moments,activateMoment);
 
-  function checkoutProduct(){return selectedCheckout==='bundle'?config?.bundle:(config?.products?.find(p=>p.id===selectedCheckout)||currentProduct());}
-  function checkoutReady(p){try{const url=new URL(p?.checkoutUrl);return !config.reviewMode && !!config.launchDeliveryDate && url.protocol==='https:' && (url.hostname==='gumroad.com'||url.hostname.endsWith('.gumroad.com')||url.hostname==='lemonsqueezy.com'||url.hostname.endsWith('.lemonsqueezy.com'));}catch{return false;}}
-  document.addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(!b)return;selectedCheckout=b.dataset.buy||document.body.dataset.productId;configureCheckout();openDialog('#checkout-dialog');});
-  function configureCheckout(){
-    const p=checkoutProduct(),link=$('#checkout-link'),active=checkoutReady(p);
-    link.hidden=!active;$('#checkout-status').hidden=active;
-    if(!p)return;
-    $('#checkout-title').textContent=p.id==='bundle'?'The complete Braver Mondays collection':p.checkoutHeading;
-    $('.order-line h3').textContent=p.title;
-    $('.order-line strong').textContent='US$'+p.price+' · pre-order';
-    $('.order-line img').src=p.image;
-    $('.order-line p').textContent=p.id==='bundle'?'Three workbooks + three companion guides':'Workbook + companion guide';
-    const facts=$('#checkout-dialog .check-list');facts.innerHTML='';
-    [p.id==='bundle'?'All three independent workshops':p.workbookPages+'-page workbook + '+p.guidePages+'-page companion guide','Printable PDFs to keep and reuse',config?.launchDeliveryDate?'Delivery: '+config.launchDeliveryDate:'Delivery date will be confirmed before payment'].forEach(text=>{const li=document.createElement('li');li.textContent=text;facts.append(li);});
-    if(active)link.href=p.checkoutUrl;else link.removeAttribute('href');
+  function signupSettings(intent,topic){return config?.emailForms?.[intent==='sample'?'samples':'waitlist']?.[topic];}
+  function validSignupAction(value){try{const u=new URL(value);return u.protocol==='https:'&&['app.kit.com','app.convertkit.com'].includes(u.hostname)&&/^\/forms\/\d+\/subscriptions$/.test(u.pathname);}catch{return false;}}
+  function configureSignup(){
+    const form=$('#demand-form'),settings=signupSettings(selectedIntent,selectedTopic),ready=!!(settings?.enabled&&validSignupAction(settings.action));
+    const sample=selectedIntent==='sample',p=config?.products.find(p=>p.id===selectedTopic);
+    $('#email-title').textContent=sample?'Get 3 free pages by email.':'Be first to hear about the launch.';
+    $('#email-eyebrow').textContent=sample?'TRY A WORKSHOP':'JOIN THE LAUNCH WAITLIST';
+    $('#email-workshop').textContent=sample?(p?.title||'Workshop sample'):'Choose what you’d like to hear about. Joining is free and is not an order.';
+    $('#interest-field').hidden=sample;$('#signup-interest').disabled=sample;
+    $('#signup-interest').value=selectedTopic;
+    $('#email-purpose').textContent=sample?'We’ll send your sample and a confirmation email. Sample requests do not add you to launch announcements.':'I’d like occasional Braver Mondays development updates and launch announcements about my selected workshop. Unsubscribe anytime.';
+    $('#signup-submit').textContent=sample?'Send my free pages ↗':'Join the free waitlist ↗';
+    $('#signup-email').disabled=!ready;$('#signup-submit').disabled=!ready;
+    $('#signup-status').textContent=ready?'Confirm your email using the link Kit sends.':'Email signup is being connected. No address is collected yet.';
+    $('#switch-waitlist').hidden=!sample;
+    if(ready)form.action=settings.action;else form.removeAttribute('action');
   }
-  $('#checkout-link').addEventListener('click',e=>{const p=checkoutProduct();if(!checkoutReady(p)){e.preventDefault();return;}track('InitiateCheckout',{content_ids:[p.id],content_type:'product',num_items:p.id==='bundle'?3:1,value:p.price,currency:p.currency});});
-  function sampleReady(){try{return !config.reviewMode&&new URL(config.sampleSignupEndpoint).protocol==='https:';}catch{return false;}}
-  document.addEventListener('click',e=>{const b=e.target.closest('[data-email-sample]');if(!b)return;e.preventDefault();selectedSample=b.dataset.emailSample;const p=config?.products.find(p=>p.id===selectedSample);$('#email-workshop').textContent=p?.title||'Workshop sample';const form=$('#sample-email-form');form.reset();[...form.elements].forEach(el=>el.disabled=!sampleReady());$('#email-result').textContent=sampleReady()?'Enter your email and we’ll send your sample.':'Email delivery is not connected yet. No email address is collected.';openDialog('#email-dialog');});
-  $('#sample-email-form').addEventListener('submit',async e=>{
-    e.preventDefault();if(!sampleReady()||!e.target.reportValidity())return;
-    const form=e.target,button=$('button[type=submit]',form);button.disabled=true;$('#email-result').textContent='Requesting your sample…';
-    try{const response=await fetch(config.sampleSignupEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:form.elements.email.value,productId:selectedSample,marketingConsent:form.elements.marketing.checked})});const result=await response.json();if(!response.ok||result.accepted!==true)throw Error('Not accepted');$('#email-result').textContent='Your request was received. Check your inbox for the sample or confirmation email.';track('Lead',{content_name:selectedSample+' sample'},false);form.reset();}catch{$('#email-result').textContent='We couldn’t send your request. Please try again. Your request has not been confirmed.';}finally{button.disabled=false;}
-  });
+  function openSignup(intent,topic){selectedIntent=intent;selectedTopic=topic||'all';$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
+  document.addEventListener('click',e=>{const sample=e.target.closest('[data-email-sample]'),wait=e.target.closest('[data-waitlist]');if(sample){e.preventDefault();openSignup('sample',sample.dataset.emailSample);}else if(wait){e.preventDefault();openSignup('waitlist',wait.dataset.waitlist||document.body.dataset.productId);}});
+  $('#signup-interest').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
+  $('#switch-waitlist').addEventListener('click',()=>openSignup('waitlist',selectedTopic));
+  $('#demand-form').addEventListener('submit',e=>{const settings=signupSettings(selectedIntent,selectedTopic);if(!settings?.enabled||!validSignupAction(settings.action)||!e.target.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}e.target.action=settings.action;track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);});
   function renderTestimonials(){const container=$('#testimonial-quotes');if(!container)return;container.replaceChildren();(config.testimonials||[]).filter(t=>t.approved&&t.quote&&t.name).forEach(t=>{const figure=document.createElement('figure'),quote=document.createElement('blockquote'),caption=document.createElement('figcaption');quote.textContent=t.quote;caption.textContent=t.name+(t.role?' · '+t.role:'');figure.append(quote,caption);container.append(figure);});$('#testimonials').hidden=!container.childElementCount;}
   // Purchase is intentionally never emitted from a button or a client-controlled return URL.
   // Verified payment completion belongs to the checkout provider / server integration.
@@ -84,7 +82,7 @@
   if(angles[angle]&&$('#campaign-intro')){$('#campaign-intro').textContent=angles[angle];activateMoment({'missed-deadline':0,'former-peer':1,'workload':2}[angle]);}
   const artWorkload='<svg viewBox="0 0 240 150" fill="none" aria-hidden="true"><rect x="35" y="23" width="170" height="108" rx="8" fill="#f7f4ec" stroke="#176f65" stroke-width="2"/><path d="M35 49h170M68 14v22M172 14v22" stroke="#176f65" stroke-width="3" stroke-linecap="round"/><path d="M56 72h34M104 72h34M152 72h30M56 95h34M104 95h34" stroke="#176f65" stroke-width="9" stroke-linecap="round"/><path d="m158 98 7 7 15-17" stroke="#b9523b" stroke-width="3" stroke-linecap="round"/></svg>';
   const artFeedback='<svg viewBox="0 0 240 150" fill="none" aria-hidden="true"><path d="M22 25h130v65H73L51 109V90H22V25Z" fill="#f7f4ec" stroke="#176f65" stroke-width="2"/><path d="M172 55h46v67h-27l-20 17v-17h-53v-16" stroke="#b9523b" stroke-width="2" fill="none"/><path d="M45 47h84M45 64h61" stroke="#176f65" stroke-width="5" stroke-linecap="round"/></svg>';
-  function renderCatalog(filter='All'){if(!$('#catalog-grid')||!config)return;const products=config.products.filter(p=>filter==='All'||p.category===filter);$('#catalog-count').textContent=`${products.length} workshop${products.length===1?'':'s'}`;$('#catalog-grid').innerHTML=products.map(p=>{const planned=p.status==='planned';return `<article class="product-tile"><div class="product-art ${planned?escape(p.id):''}">${planned?(p.id==='workweek'?artWorkload:artFeedback):`<a href="${escape(p.path)}" aria-label="Explore ${escape(p.title)}"><img src="${escape(p.image)}" alt="${escape(p.title)} workbook cover" width="1200" height="849" loading="lazy"></a>`}</div><p class="tile-status">${escape(p.category)} · ${planned?'Planned topic':'PDF workshop'}</p><h2>${planned?escape(p.title):`<a href="${escape(p.path)}">${escape(p.title)}</a>`}</h2><p>${escape(p.description)}</p>${planned?'':`<p class="tile-format">${p.workbookPages}-page workbook + ${p.guidePages}-page guide<br>Examples, practice and reusable tools · About 60 minutes working independently</p>`}<div class="tile-bottom">${planned?'<span>Not yet available</span>':`<span>US$${p.price} launch pre-order · Standard US$${p.standardPrice}</span><a href="${escape(p.path)}">Explore workshop ↗</a>`}</div></article>`;}).join('');}
+  function renderCatalog(filter='All'){if(!$('#catalog-grid')||!config)return;const products=config.products.filter(p=>filter==='All'||p.category===filter);$('#catalog-count').textContent=`${products.length} workshop${products.length===1?'':'s'}`;$('#catalog-grid').innerHTML=products.map(p=>{const planned=p.status==='planned';return `<article class="product-tile"><div class="product-art ${planned?escape(p.id):''}">${planned?(p.id==='workweek'?artWorkload:artFeedback):`<a href="${escape(p.path)}" aria-label="Explore ${escape(p.title)}"><img src="${escape(p.image)}" alt="${escape(p.title)} workbook cover" width="1200" height="849" loading="lazy"></a>`}</div><p class="tile-status">${escape(p.category)} · ${planned?'Planned topic':'PDF workshop'}</p><h2>${planned?escape(p.title):`<a href="${escape(p.path)}">${escape(p.title)}</a>`}</h2><p>${escape(p.description)}</p>${planned?'':`<p class="tile-format">${p.workbookPages}-page workbook + ${p.guidePages}-page guide<br>Examples, practice and reusable tools · About 60 minutes working independently</p>`}<div class="tile-bottom">${planned?'<span>Not yet available</span>':`<span>Free sample · Full workshop planned</span><a href="${escape(p.path)}">Explore workshop ↗</a>`}</div></article>`;}).join('');}
   $$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{$$('[data-filter]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b);});renderCatalog(b.dataset.filter);}));
   const choices=$$('[data-hours]');
   function updateCapacity(){const saved=choices.filter(x=>x.checked).reduce((n,x)=>n+Number(x.dataset.hours),0);const remaining=25-saved,gap=remaining-15;$('#capacity-demand').textContent=remaining+' h';$('#capacity-gap').textContent=gap?gap+' hours still need a decision':'The plan fits the 15 hours available';$('#capacity-result').classList.toggle('balanced',gap===0);$('#capacity-fill').style.width=(remaining/25*100)+'%';$('#capacity-note').textContent=gap?'Choose agreed changes below. Protect the 4.5-hour contingency already set aside.':'Scope, timing and ownership now fit. Confirm every agreement; if the peer cannot help, the 3-hour gap returns.';}
@@ -99,13 +97,13 @@
   function activateDecision(i,focus=false){decisions.forEach((b,j)=>{b.setAttribute('aria-selected',j===i);b.tabIndex=j===i?0:-1;});const d=decisionContent[i];['title','words','reason'].forEach(k=>$('#decision-'+k).textContent=d[k]);$('#decision-number').textContent='0'+(i+1);$('#decision-panel').setAttribute('aria-labelledby','decision-tab-'+i);if(focus)decisions[i].focus();}
   decisions.forEach((b,i)=>b.addEventListener('click',()=>activateDecision(i)));
   keyboardTabs(decisions,activateDecision);
-  fetch('/braver-mondays/site-config.json', {cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration unavailable');return r.json();}).then(c=>{config=c;configureCheckout();renderCatalog();renderTestimonials();if(config.metaPixelId&&!config.reviewMode){$('#cookie-banner').hidden=!!consent;startMeasurement();}}).catch(()=>{if($('#catalog-grid'))$('#catalog-grid').innerHTML='<p>Workshop details could not load. <a href="/braver-mondays/workshops/difficult-conversations/">Explore the first workshop</a>.</p>';});
+  fetch('/braver-mondays/site-config.json', {cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration unavailable');return r.json();}).then(c=>{config=c;configureSignup();renderCatalog();renderTestimonials();if(config.metaPixelId&&!config.reviewMode){$('#cookie-banner').hidden=!!consent;startMeasurement();}}).catch(()=>{if($('#catalog-grid'))$('#catalog-grid').innerHTML='<p>Workshop details could not load. <a href="/braver-mondays/workshops/difficult-conversations/">Explore the first workshop</a>.</p>';});
   if('IntersectionObserver'in window){if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-motion');const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}}),{threshold:.08});$$('.reveal').forEach(el=>observer.observe(el));}const sticky=$('#mobile-purchase'),cta=$('.hero-actions');
     if(sticky&&cta){
       let pastHero=false,offerVisible=false,footerVisible=false;
       const updateSticky=()=>{sticky.hidden=!pastHero||offerVisible||footerVisible;};
       new IntersectionObserver(entries=>{const e=entries[0];pastHero=!e.isIntersecting&&e.boundingClientRect.top<0;updateSticky();},{threshold:0}).observe(cta);
-      const offerButton=$('#offer [data-buy]');
+      const offerButton=$('#offer [data-waitlist]');
       if(offerButton)new IntersectionObserver(entries=>{offerVisible=entries[0].isIntersecting;updateSticky();},{threshold:0}).observe(offerButton);
       new IntersectionObserver(entries=>{footerVisible=entries[0].isIntersecting;updateSticky();},{threshold:0}).observe($('footer'));
     }}

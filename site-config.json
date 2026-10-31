@@ -10,12 +10,12 @@
       "id": "difficult-conversations",
       "title": "Prepare Your Next Difficult Conversation",
       "category": "Communication",
-      "status": "preorder",
+      "status": "launch",
       "description": "Find your opening, make room for another perspective and agree a next step.",
       "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
-      "checkoutUrl": "",
+      "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-difficult-conversations",
       "path": "/braver-mondays/workshops/difficult-conversations/",
       "image": "/braver-mondays/assets/workbook-01.webp",
       "workbookPages": 20,
@@ -39,18 +39,21 @@
           "alt": "Your one-page conversation plan"
         }
       ],
-      "standardPrice": 29
+      "standardPrice": 29,
+      "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-conversation-sample",
+      "checkoutEnabled": false,
+      "sampleEnabled": false
     },
     {
       "id": "workweek",
       "title": "Plan a More Manageable Workweek",
       "category": "Workload",
-      "status": "preorder",
+      "status": "launch",
       "description": "See what fits, agree what changes and start the week with a realistic plan.",
       "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
-      "checkoutUrl": "",
+      "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-manageable-workweek",
       "path": "/braver-mondays/workshops/manageable-workweek/",
       "image": "/braver-mondays/assets/workweek-01.webp",
       "workbookPages": 24,
@@ -74,18 +77,21 @@
           "alt": "Your one-page weekly plan"
         }
       ],
-      "standardPrice": 29
+      "standardPrice": 29,
+      "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-workweek-sample",
+      "checkoutEnabled": false,
+      "sampleEnabled": false
     },
     {
       "id": "delegation",
       "title": "Delegate Without Taking It All Back",
       "category": "Delegation",
-      "status": "preorder",
+      "status": "launch",
       "description": "Agree the result, decision boundaries and check-ins so someone else can own the next step.",
       "price": 19,
       "currency": "USD",
       "duration": "About 60 minutes working independently",
-      "checkoutUrl": "",
+      "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-delegation",
       "path": "/braver-mondays/workshops/delegation/",
       "image": "/braver-mondays/assets/delegation-01.webp",
       "workbookPages": 20,
@@ -109,12 +115,14 @@
           "alt": "Your check-in and ownership plan"
         }
       ],
-      "standardPrice": 29
+      "standardPrice": 29,
+      "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-delegation-sample",
+      "checkoutEnabled": false,
+      "sampleEnabled": false
     }
   ],
   "tagline": "Lead with clarity. Work with care.",
   "launchDeliveryDate": "",
-  "sampleSignupEndpoint": "",
   "testimonials": [],
   "bundle": {
     "id": "bundle",
@@ -122,7 +130,58 @@
     "price": 59,
     "standardPrice": 87,
     "currency": "USD",
-    "checkoutUrl": "",
-    "image": "/braver-mondays/assets/workbook-01.webp"
+    "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-complete-collection",
+    "image": "/braver-mondays/assets/workbook-01.webp",
+    "checkoutEnabled": false
+  },
+  "deliveryMode": "immediate",
+  "mode": "email-first",
+  "paymentsEnabled": false,
+  "emailProvider": "Kit",
+  "emailForms": {
+    "samples": {
+      "difficult-conversations": {
+        "action": "https://app.kit.com/forms/10125709/subscriptions",
+        "enabled": true,
+        "formId": 10125709
+      },
+      "workweek": {
+        "action": "https://app.kit.com/forms/10125720/subscriptions",
+        "enabled": true,
+        "formId": 10125720
+      },
+      "delegation": {
+        "action": "https://app.kit.com/forms/10125724/subscriptions",
+        "enabled": true,
+        "formId": 10125724
+      }
+    },
+    "waitlist": {
+      "all": {
+        "action": "https://app.kit.com/forms/10125726/subscriptions",
+        "enabled": true,
+        "formId": 10125726
+      },
+      "bundle": {
+        "action": "https://app.kit.com/forms/10125726/subscriptions",
+        "enabled": true,
+        "formId": 10125726
+      },
+      "difficult-conversations": {
+        "action": "https://app.kit.com/forms/10125726/subscriptions",
+        "enabled": true,
+        "formId": 10125726
+      },
+      "workweek": {
+        "action": "https://app.kit.com/forms/10125726/subscriptions",
+        "enabled": true,
+        "formId": 10125726
+      },
+      "delegation": {
+        "action": "https://app.kit.com/forms/10125726/subscriptions",
+        "enabled": true,
+        "formId": 10125726
+      }
+    }
   }
 }
