@@ -107,3 +107,6 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .signup-legal{margin-top:-8px}
 .signup-dialog #switch-waitlist{display:block;margin:16px auto 0;color:var(--teal);font-size:13px}
 @media(max-width:760px){.signup-dialog{padding:30px 20px 22px}.signup-dialog h2{font-size:29px;padding-right:24px}.signup-intro{font-size:14px}.sample-choices{grid-template-columns:1fr;gap:8px}#demand-form .sample-choice{flex-direction:row;align-items:center;gap:12px;padding:8px 12px 8px 8px}#demand-form .sample-choice img{width:68px;flex-shrink:0}.choice-line{align-items:center}.signup-steps{gap:6px}.signup-steps li{flex-direction:column;align-items:flex-start;gap:5px;font-size:11px}.workbook-points li{font-size:13px}}
+/* Brand the dropdown: iOS Safari otherwise shows select text and arrows in system blue. */
+#demand-form input,#demand-form select{color:var(--ink)}
+#demand-form select{-webkit-appearance:none;appearance:none;padding-right:46px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23176f65' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 18px center/12px 8px;cursor:pointer}
