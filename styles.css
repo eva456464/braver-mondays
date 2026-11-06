@@ -60,3 +60,14 @@
 
 /* Email-first demand validation, preserving the existing layout. */
 .launch-waitlist{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center;background:#f1eee4;border-block:1px solid #ccd7cc}.launch-waitlist h2{margin:12px 0 20px}#demand-form{display:grid;gap:14px}#demand-form label{display:block;font-weight:600;margin-bottom:6px}#demand-form input,#demand-form select{width:100%;box-sizing:border-box;font:inherit;padding:14px;border:1px solid #728a80;border-radius:4px;background:#fff}#switch-waitlist{margin-top:20px;text-align:left}[hidden]{display:none!important}@media(max-width:700px){.launch-waitlist{grid-template-columns:1fr;gap:24px}}
+
+/* Floating "Get your free samples" button, present on every page. */
+.sample-fab{position:fixed;z-index:10;right:max(24px,env(safe-area-inset-right));bottom:max(24px,calc(env(safe-area-inset-bottom) + 12px));display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:12px 22px 12px 17px;border-radius:999px;border:1px solid #ffffff40;background:var(--teal);color:#fff;font-weight:700;font-size:14px;line-height:1.2;letter-spacing:.01em;box-shadow:0 10px 28px #102f283d,0 2px 6px #102f2826;transition:translate .2s,background .2s,box-shadow .2s,bottom .25s;animation:sample-fab-in .45s .5s both}
+.sample-fab:hover{background:#105b52;translate:0 -2px;box-shadow:0 14px 32px #102f284d}
+.sample-fab svg{width:22px;height:22px;flex-shrink:0}
+.sample-fab:focus-visible{outline:3px solid #b9523b;outline-offset:4px}
+@keyframes sample-fab-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+footer{padding-bottom:110px}
+body:has(#cookie-banner:not([hidden])) .sample-fab{display:none}
+@media(max-width:760px){.sample-fab{right:max(16px,env(safe-area-inset-right));bottom:max(16px,calc(env(safe-area-inset-bottom) + 10px));min-height:48px;font-size:13px;padding:11px 18px 11px 14px;gap:9px}.sample-fab svg{width:20px;height:20px}body:has(#mobile-purchase:not([hidden])) .sample-fab{bottom:calc(84px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.sample-fab{animation:none;transition:none}.sample-fab:hover{translate:none}}

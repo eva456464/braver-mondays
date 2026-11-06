@@ -4,7 +4,7 @@
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
   const samples = JSON.parse($('#sample-data').textContent);
   const currentProduct = () => config?.products?.find(p=>p.id===document.body.dataset.productId);
-  let sampleIndex=0, config=null, pixelReady=false, pageTracked=false, selectedIntent='sample', selectedTopic=null;
+  let sampleIndex=0, config=null, pixelReady=false, pageTracked=false, selectedIntent='sample', selectedTopic=null, sampleChooser=false;
   let consent=null;
   try {const c=JSON.parse(localStorage.getItem('bravermondays_consent_v1') || localStorage.getItem('firstlead_consent_v1'));if(c && ['granted','denied'].includes(c.value) && Date.now()-c.at<180*86400000)consent=c.value;} catch {}
   const escape = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -52,21 +52,25 @@
   function configureSignup(){
     const form=$('#demand-form'),settings=signupSettings(selectedIntent,selectedTopic),ready=!!(settings?.enabled&&validSignupAction(settings.action));
     const sample=selectedIntent==='sample',p=config?.products.find(p=>p.id===selectedTopic);
+    // The floating button on pages without a single workshop asks the visitor to pick one first.
+    const choosing=sample&&sampleChooser,needsChoice=choosing&&!settings,open=ready||needsChoice;
+    $('#sample-field').hidden=!choosing;$('#sample-topic').disabled=!choosing;
     $('#email-title').textContent=sample?'Get 3 free pages by email.':'Be first to hear about the launch.';
     $('#email-eyebrow').textContent=sample?'TRY A WORKSHOP':'JOIN THE LAUNCH WAITLIST';
-    $('#email-workshop').textContent=sample?(p?.title||'Workshop sample'):'Choose what you’d like to hear about. Joining is free and is not an order.';
+    $('#email-workshop').textContent=sample?(p?.title||(choosing?'Pick a workshop and we’ll email you three pages from it.':'Workshop sample')):'Choose what you’d like to hear about. Joining is free and is not an order.';
     $('#interest-field').hidden=sample;$('#signup-interest').disabled=sample;
     $('#signup-interest').value=selectedTopic;
     $('#email-purpose').textContent=sample?'We’ll send your sample and a confirmation email. Sample requests do not add you to launch announcements.':'I’d like occasional Braver Mondays development updates and launch announcements about my selected workshop. Unsubscribe anytime.';
     $('#signup-submit').textContent=sample?'Send my free pages ↗':'Join the free waitlist ↗';
-    $('#signup-email').disabled=!ready;$('#signup-submit').disabled=!ready;
-    $('#signup-status').textContent=ready?'Confirm your email using the link Kit sends.':'Email signup is being connected. No address is collected yet.';
+    $('#signup-email').disabled=!open;$('#signup-submit').disabled=!open;
+    $('#signup-status').textContent=ready?'Confirm your email using the link Kit sends.':needsChoice?'Choose a workshop to continue.':'Email signup is being connected. No address is collected yet.';
     $('#switch-waitlist').hidden=!sample;
     if(ready)form.action=settings.action;else form.removeAttribute('action');
   }
-  function openSignup(intent,topic){selectedIntent=intent;selectedTopic=topic||'all';$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
+  function openSignup(intent,topic){selectedIntent=intent;sampleChooser=intent==='sample'&&topic==='choose';selectedTopic=sampleChooser?null:(topic||'all');$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
   document.addEventListener('click',e=>{const sample=e.target.closest('[data-email-sample]'),wait=e.target.closest('[data-waitlist]');if(sample){e.preventDefault();openSignup('sample',sample.dataset.emailSample);}else if(wait){e.preventDefault();openSignup('waitlist',wait.dataset.waitlist||document.body.dataset.productId);}});
   $('#signup-interest').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
+  $('#sample-topic').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
   $('#switch-waitlist').addEventListener('click',()=>openSignup('waitlist',selectedTopic));
   $('#demand-form').addEventListener('submit',e=>{const settings=signupSettings(selectedIntent,selectedTopic);if(!settings?.enabled||!validSignupAction(settings.action)||!e.target.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}e.target.action=settings.action;track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);});
   function renderTestimonials(){const container=$('#testimonial-quotes');if(!container)return;container.replaceChildren();(config.testimonials||[]).filter(t=>t.approved&&t.quote&&t.name).forEach(t=>{const figure=document.createElement('figure'),quote=document.createElement('blockquote'),caption=document.createElement('figcaption');quote.textContent=t.quote;caption.textContent=t.name+(t.role?' · '+t.role:'');figure.append(quote,caption);container.append(figure);});$('#testimonials').hidden=!container.childElementCount;}
