@@ -9,7 +9,8 @@
   try {const c=JSON.parse(localStorage.getItem('bravermondays_consent_v1') || localStorage.getItem('firstlead_consent_v1'));if(c && ['granted','denied'].includes(c.value) && Date.now()-c.at<180*86400000)consent=c.value;} catch {}
   const escape = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let dialogReturnFocus=null;
-  function openDialog(id){if(!document.activeElement.closest('dialog'))dialogReturnFocus=document.activeElement;$$('dialog[open]').forEach(d=>d.close());const d=$(id);if(d&&!d.open)d.showModal();}
+  // Start focus on the dialog heading rather than the close button, so no focus ring flashes on "×" when a dialog opens.
+  function openDialog(id){if(!document.activeElement.closest('dialog'))dialogReturnFocus=document.activeElement;$$('dialog[open]').forEach(d=>d.close());const d=$(id);if(d&&!d.open){d.showModal();const h=$('h2',d);if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}}
   $$('dialog').forEach(d=>d.addEventListener('close',()=>{if(!$('dialog[open]')&&dialogReturnFocus?.isConnected&&dialogReturnFocus.getClientRects().length)dialogReturnFocus.focus();}));
   $$('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{a.closest('details').open=false;}));
   $$('.mobile-menu').forEach(menu=>menu.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.open=false;$('summary',menu).focus();}}));
@@ -54,25 +55,32 @@
     const sample=selectedIntent==='sample',p=config?.products.find(p=>p.id===selectedTopic);
     // The floating button on pages without a single workshop asks the visitor to pick one first.
     const choosing=sample&&sampleChooser,needsChoice=choosing&&!settings,open=ready||needsChoice;
-    $('#sample-field').hidden=!choosing;$('#sample-topic').disabled=!choosing;
-    $('#email-title').textContent=sample?'Get 3 free pages by email.':'Be first to hear about the launch.';
-    $('#email-eyebrow').textContent=sample?'TRY A WORKSHOP':'JOIN THE LAUNCH WAITLIST';
-    $('#email-workshop').textContent=sample?(p?.title||(choosing?'Pick a workshop and we’ll email you three pages from it.':'Workshop sample')):'Choose what you’d like to hear about. Joining is free and is not an order.';
+    $('#sample-field').hidden=!choosing;$('#sample-field').disabled=!choosing;
+    $('#email-eyebrow').textContent=sample?'FREE SAMPLES':'JOIN THE LAUNCH WAITLIST';
+    $('#email-title').textContent=sample?'Get 3 free samples by email.':(p?'Be first to get the full workbook.':'Be first to get the full workbooks.');
+    $('#email-workshop').textContent=sample?(choosing?'Pick a workshop and try real exercises from it before it launches.':'Try real exercises from the workshop before it launches.'):'Each workshop is a self-guided PDF workbook. Bring one real situation and work through it step by step, in about an hour.';
+    // Show what the visitor gets: the workbook cover and what's in it.
+    const item=p||(!sample&&selectedTopic==='bundle'?config?.bundle:null),summary=$('#sample-summary');
+    summary.hidden=!item||choosing;
+    if(item){$('#sample-summary-img').src=item.image;$('#sample-summary-title').textContent=item.title;$('span',summary).textContent=sample?'3 free samples from the workbook · PDF':p?`${p.workbookPages}-page workbook + ${p.guidePages}-page guide · about 60 minutes`:'All three workbooks and their guides';}
+    $('#waitlist-points').hidden=sample;
     $('#interest-field').hidden=sample;$('#signup-interest').disabled=sample;
     $('#signup-interest').value=selectedTopic;
-    $('#email-purpose').textContent=sample?'We’ll send your sample and a confirmation email. Sample requests do not add you to launch announcements.':'I’d like occasional Braver Mondays development updates and launch announcements about my selected workshop. Unsubscribe anytime.';
-    $('#signup-submit').textContent=sample?'Send my free pages ↗︎':'Join the free waitlist ↗︎';
+    $('#email-purpose').textContent=sample?'We’ll send your samples and a confirmation email. Sample requests do not add you to launch announcements.':'I’d like occasional Braver Mondays development updates and launch announcements about my selected workshop. Unsubscribe anytime.';
+    $('#signup-submit').textContent=sample?'Send my free samples ↗︎':'Join the free waitlist ↗︎';
+    $('#signup-step-3').textContent=sample?'Your samples open':'Hear first at launch';
+    $('#signup-trust').innerHTML=(sample?['Free','No card needed','Unsubscribe anytime']:['Free to join','Not an order','Unsubscribe anytime']).map(t=>`<li>${t}</li>`).join('');
     $('#signup-email').disabled=!open;$('#signup-submit').disabled=!open;
-    $('#signup-status').textContent=ready?'Confirm your email using the link Kit sends.':needsChoice?'Choose a workshop to continue.':'Email signup is being connected. No address is collected yet.';
+    $('#signup-status').textContent=open?'':'Email signup is being connected. No address is collected yet.';
     $('#switch-waitlist').hidden=!sample;
     if(ready)form.action=settings.action;else form.removeAttribute('action');
   }
   function openSignup(intent,topic){selectedIntent=intent;sampleChooser=intent==='sample'&&topic==='choose';selectedTopic=sampleChooser?null:(topic||'all');$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
   document.addEventListener('click',e=>{const sample=e.target.closest('[data-email-sample]'),wait=e.target.closest('[data-waitlist]');if(sample){e.preventDefault();openSignup('sample',sample.dataset.emailSample);}else if(wait){e.preventDefault();openSignup('waitlist',wait.dataset.waitlist||document.body.dataset.productId);}});
   $('#signup-interest').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
-  $('#sample-topic').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
+  $$('#sample-field input').forEach(r=>r.addEventListener('change',()=>{selectedTopic=r.value;configureSignup();}));
   $('#switch-waitlist').addEventListener('click',()=>openSignup('waitlist',selectedTopic));
-  $('#demand-form').addEventListener('submit',e=>{const settings=signupSettings(selectedIntent,selectedTopic);if(!settings?.enabled||!validSignupAction(settings.action)||!e.target.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}e.target.action=settings.action;track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);});
+  $('#demand-form').addEventListener('submit',e=>{const settings=signupSettings(selectedIntent,selectedTopic);if(!settings?.enabled||!validSignupAction(settings.action)||!e.target.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}e.target.action=settings.action;$('#sample-field').disabled=true;/* the workshop choice only routes to the right Kit form; it is not sent to Kit */track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);});
   function renderTestimonials(){const container=$('#testimonial-quotes');if(!container)return;container.replaceChildren();(config.testimonials||[]).filter(t=>t.approved&&t.quote&&t.name).forEach(t=>{const figure=document.createElement('figure'),quote=document.createElement('blockquote'),caption=document.createElement('figcaption');quote.textContent=t.quote;caption.textContent=t.name+(t.role?' · '+t.role:'');figure.append(quote,caption);container.append(figure);});$('#testimonials').hidden=!container.childElementCount;}
   // Purchase is intentionally never emitted from a button or a client-controlled return URL.
   // Verified payment completion belongs to the checkout provider / server integration.

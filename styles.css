@@ -71,3 +71,39 @@ footer{padding-bottom:110px}
 body:has(#cookie-banner:not([hidden])) .sample-fab{display:none}
 @media(max-width:760px){.sample-fab{right:max(16px,env(safe-area-inset-right));bottom:max(16px,calc(env(safe-area-inset-bottom) + 10px));min-height:48px;font-size:13px;padding:11px 18px 11px 14px;gap:9px}.sample-fab svg{width:20px;height:20px}body:has(#mobile-purchase:not([hidden])) .sample-fab{bottom:calc(84px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.sample-fab{animation:none;transition:none}.sample-fab:hover{translate:none}}
+
+/* Friendlier email signup dialog (free samples + launch waitlist). */
+.signup-dialog{max-width:560px;padding:36px 36px 26px}
+.signup-dialog .eyebrow{margin-bottom:14px}
+.signup-dialog h2{font-size:34px;margin-bottom:10px}
+dialog h2[tabindex="-1"]:focus{outline:none}
+.signup-intro{font-size:15px;line-height:1.55;margin-bottom:18px}
+.sample-summary{display:flex;align-items:center;gap:16px;padding:12px 14px;background:var(--mint);border-radius:8px;margin-bottom:18px}
+.sample-summary img{width:86px;flex-shrink:0;border-radius:2px;box-shadow:0 4px 12px #20373826;transform:rotate(-3deg)}
+.sample-summary strong{display:block;font-size:15px;line-height:1.3;color:var(--ink)}
+.sample-summary span{display:block;font-size:12px;color:var(--muted);margin-top:4px}
+.workbook-points{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:8px}
+.workbook-points li{position:relative;padding-left:28px;font-size:14px;line-height:1.45;color:var(--ink)}
+.workbook-points li:before{content:'✓';position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+#demand-form .sample-field{border:0;margin:0;padding:0;min-width:0}
+#demand-form .sample-field legend{font-weight:600;padding:0;margin-bottom:10px}
+.sample-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+#demand-form .sample-choice{display:flex;flex-direction:column;gap:10px;margin:0;padding:10px 10px 12px;border:1.5px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;line-height:1.3;transition:border-color .15s,background .15s,box-shadow .15s}
+#demand-form .sample-choice:hover{border-color:#8fb1a5}
+#demand-form .sample-choice img{width:100%;aspect-ratio:1.42;object-fit:cover;border-radius:3px}
+.choice-line{display:flex;align-items:flex-start;gap:8px}
+#demand-form .choice-line input{flex:0 0 auto;width:17px;height:17px;margin:1px 0 0;padding:0;border:0;accent-color:var(--teal)}
+#demand-form .sample-choice:has(input:checked){border-color:var(--teal);background:#eef6f2;box-shadow:0 0 0 3px #176f6524}
+#demand-form .sample-choice:has(input:focus-visible){outline:3px solid #b9523b;outline-offset:2px}
+#signup-email::placeholder{color:#8b9b96}
+#signup-submit{width:100%;min-height:54px;font-size:15px}
+#signup-status:empty{display:none}
+.signup-steps{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.signup-steps li{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.3;color:var(--muted)}
+.signup-steps b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--mint);color:var(--teal);display:grid;place-items:center;font-size:11px}
+.signup-trust{list-style:none;margin:0;padding:12px 0 0;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;font-weight:600;color:var(--ink)}
+.signup-trust li:before{content:'✓';color:var(--teal);margin-right:6px}
+#email-purpose{margin-top:-4px}
+.signup-legal{margin-top:-8px}
+.signup-dialog #switch-waitlist{display:block;margin:16px auto 0;color:var(--teal);font-size:13px}
+@media(max-width:760px){.signup-dialog{padding:30px 20px 22px}.signup-dialog h2{font-size:29px;padding-right:24px}.signup-intro{font-size:14px}.sample-choices{grid-template-columns:1fr;gap:8px}#demand-form .sample-choice{flex-direction:row;align-items:center;gap:12px;padding:8px 12px 8px 8px}#demand-form .sample-choice img{width:68px;flex-shrink:0}.choice-line{align-items:center}.signup-steps{gap:6px}.signup-steps li{flex-direction:column;align-items:flex-start;gap:5px;font-size:11px}.workbook-points li{font-size:13px}}
