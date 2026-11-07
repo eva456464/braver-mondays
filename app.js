@@ -70,7 +70,7 @@
     $('#signup-submit').textContent=sample?'Send my free samples ↗︎':'Join the free waitlist ↗︎';
     $('#signup-step-3').textContent=sample?'Your samples open':'Hear first at launch';
     $('#signup-trust').innerHTML=(sample?['Free','No card needed','Unsubscribe anytime']:['Free to join','Not an order','Unsubscribe anytime']).map(t=>`<li>${t}</li>`).join('');
-    $('#signup-email').disabled=!open;$('#signup-submit').disabled=!open;
+    $('#signup-email').disabled=!open;$('#signup-name').disabled=!open;$('#signup-submit').disabled=!open;
     $('#signup-status').textContent=open?'':'Email signup is being connected. No address is collected yet.';
     $('#switch-waitlist').hidden=!sample;
     if(ready)form.action=settings.action;else form.removeAttribute('action');
@@ -79,9 +79,10 @@
   // After Kit accepts the email we show our own "Check your inbox" panel instead of sending people to Kit's page.
   const mailApps={'gmail.com':'Gmail','googlemail.com':'Gmail','outlook.com':'Outlook','hotmail.com':'Outlook','live.com':'Outlook','msn.com':'Outlook','yahoo.com':'Yahoo Mail','icloud.com':'iCloud Mail','me.com':'iCloud Mail','mac.com':'iCloud Mail'};
   const mailUrls={'Gmail':'https://mail.google.com/mail/u/0/#inbox','Outlook':'https://outlook.live.com/mail/0/','Yahoo Mail':'https://mail.yahoo.com/','iCloud Mail':'https://www.icloud.com/mail'};
-  function showSignupDone(email){
+  function showSignupDone(email,name){
     const d=$('#email-dialog'),sample=selectedIntent==='sample',app=mailApps[email.split('@').pop().toLowerCase()],link=$('#success-mail');
     d.classList.add('is-done');$('#signup-success').hidden=false;
+    $('#success-title').textContent=name?`Check your inbox, ${name}`:'Check your inbox';
     $('#success-email').textContent=email;
     $('#success-next').textContent=sample?'Tap the confirm button in that email and your free samples open straight away.':'Tap the confirm button in that email to join the waitlist. We’ll let you know when your workbook is ready.';
     $('#success-step-3').textContent=sample?'Your samples open':'You’re on the list';
@@ -102,7 +103,7 @@
     track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);
     if(!window.fetch||!window.FormData)return; // very old browsers: post straight to Kit's own page
     e.preventDefault();
-    const btn=$('#signup-submit'),label=btn.textContent,email=$('#signup-email').value.trim();
+    const btn=$('#signup-submit'),label=btn.textContent,email=$('#signup-email').value.trim(),name=$('#signup-name').value.trim().split(/\s+/)[0]||'';
     btn.disabled=true;btn.textContent='Sending…';$('#signup-status').textContent='';
     let outcome;
     try{
@@ -113,7 +114,7 @@
     btn.disabled=false;btn.textContent=label;
     if(outcome==='kit'){form.submit();return;}
     $('#sample-field').disabled=!(selectedIntent==='sample'&&sampleChooser);
-    if(outcome==='ok')showSignupDone(email);else $('#signup-status').textContent=kitError(outcome);
+    if(outcome==='ok')showSignupDone(email,name);else $('#signup-status').textContent=kitError(outcome);
   });
   // Coming back from Kit's page with the Back button: make the form usable again.
   window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
