@@ -75,12 +75,48 @@
     $('#switch-waitlist').hidden=!sample;
     if(ready)form.action=settings.action;else form.removeAttribute('action');
   }
-  function openSignup(intent,topic){selectedIntent=intent;sampleChooser=intent==='sample'&&topic==='choose';selectedTopic=sampleChooser?null:(topic||'all');$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
+  function openSignup(intent,topic){selectedIntent=intent;sampleChooser=intent==='sample'&&topic==='choose';selectedTopic=sampleChooser?null:(topic||'all');hideSignupDone();$('#demand-form').reset();configureSignup();openDialog('#email-dialog');}
+  // After Kit accepts the email we show our own "Check your inbox" panel instead of sending people to Kit's page.
+  const mailApps={'gmail.com':'Gmail','googlemail.com':'Gmail','outlook.com':'Outlook','hotmail.com':'Outlook','live.com':'Outlook','msn.com':'Outlook','yahoo.com':'Yahoo Mail','icloud.com':'iCloud Mail','me.com':'iCloud Mail','mac.com':'iCloud Mail'};
+  const mailUrls={'Gmail':'https://mail.google.com/mail/u/0/#inbox','Outlook':'https://outlook.live.com/mail/0/','Yahoo Mail':'https://mail.yahoo.com/','iCloud Mail':'https://www.icloud.com/mail'};
+  function showSignupDone(email){
+    const d=$('#email-dialog'),sample=selectedIntent==='sample',app=mailApps[email.split('@').pop().toLowerCase()],link=$('#success-mail');
+    d.classList.add('is-done');$('#signup-success').hidden=false;
+    $('#success-email').textContent=email;
+    $('#success-next').textContent=sample?'Tap the confirm button in that email and your free samples open straight away.':'Tap the confirm button in that email to join the waitlist. We’ll let you know when your workbook is ready.';
+    $('#success-step-3').textContent=sample?'Your samples open':'You’re on the list';
+    link.hidden=!app;if(app){link.href=mailUrls[app];link.textContent=`Open ${app} ↗︎`;}
+    d.scrollTop=0;$('#success-title').focus({preventScroll:true});
+  }
+  function hideSignupDone(){$('#email-dialog').classList.remove('is-done');$('#signup-success').hidden=true;}
+  $('#success-retry').addEventListener('click',()=>{hideSignupDone();configureSignup();$('#signup-email').focus();});
+  const kitError=j=>/email/i.test((j?.errors?.messages||[]).join(' '))?'Please check your email address and try again.':'Something went wrong. Please try again in a moment.';
   document.addEventListener('click',e=>{const sample=e.target.closest('[data-email-sample]'),wait=e.target.closest('[data-waitlist]');if(sample){e.preventDefault();openSignup('sample',sample.dataset.emailSample);}else if(wait){e.preventDefault();openSignup('waitlist',wait.dataset.waitlist||document.body.dataset.productId);}});
   $('#signup-interest').addEventListener('change',e=>{selectedTopic=e.target.value;configureSignup();});
   $$('#sample-field input').forEach(r=>r.addEventListener('change',()=>{selectedTopic=r.value;configureSignup();}));
   $('#switch-waitlist').addEventListener('click',()=>openSignup('waitlist',selectedTopic));
-  $('#demand-form').addEventListener('submit',e=>{const settings=signupSettings(selectedIntent,selectedTopic);if(!settings?.enabled||!validSignupAction(settings.action)||!e.target.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}e.target.action=settings.action;$('#sample-field').disabled=true;/* the workbook choice only routes to the right Kit form; it is not sent to Kit */track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);});
+  $('#demand-form').addEventListener('submit',async e=>{
+    const form=e.target,settings=signupSettings(selectedIntent,selectedTopic);
+    if(!settings?.enabled||!validSignupAction(settings.action)||!form.reportValidity()){e.preventDefault();$('#signup-status').textContent='Signup is not available yet. Please try again later.';return;}
+    form.action=settings.action;$('#sample-field').disabled=true;/* the workbook choice only routes to the right Kit form; it is not sent to Kit */
+    track('SignupFormSubmitted',{intent:selectedIntent,workshop:selectedTopic},true);
+    if(!window.fetch||!window.FormData)return; // very old browsers: post straight to Kit's own page
+    e.preventDefault();
+    const btn=$('#signup-submit'),label=btn.textContent,email=$('#signup-email').value.trim();
+    btn.disabled=true;btn.textContent='Sending…';$('#signup-status').textContent='';
+    let outcome;
+    try{
+      const j=await (await fetch(settings.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}})).json();
+      // "quarantined" means Kit wants a quick "are you human" check, which only works on its own page.
+      outcome=j.status==='success'?'ok':j.status==='quarantined'?'kit':j;
+    }catch{outcome='kit';} // network problem or Kit changed: fall back to Kit's page so the request still goes through
+    btn.disabled=false;btn.textContent=label;
+    if(outcome==='kit'){form.submit();return;}
+    $('#sample-field').disabled=!(selectedIntent==='sample'&&sampleChooser);
+    if(outcome==='ok')showSignupDone(email);else $('#signup-status').textContent=kitError(outcome);
+  });
+  // Coming back from Kit's page with the Back button: make the form usable again.
+  window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
   function renderTestimonials(){const container=$('#testimonial-quotes');if(!container)return;container.replaceChildren();(config.testimonials||[]).filter(t=>t.approved&&t.quote&&t.name).forEach(t=>{const figure=document.createElement('figure'),quote=document.createElement('blockquote'),caption=document.createElement('figcaption');quote.textContent=t.quote;caption.textContent=t.name+(t.role?' · '+t.role:'');figure.append(quote,caption);container.append(figure);});$('#testimonials').hidden=!container.childElementCount;}
   // Purchase is intentionally never emitted from a button or a client-controlled return URL.
   // Verified payment completion belongs to the checkout provider / server integration.
