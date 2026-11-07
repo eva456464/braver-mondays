@@ -177,3 +177,5 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .samples-next-actions{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
 .samples-next-actions a{font-size:14px;color:var(--teal);text-underline-offset:5px}
 @media(max-width:760px){.samples-ready{grid-template-columns:1fr;gap:36px;padding-top:36px;padding-bottom:48px}.samples-cover{max-width:380px;margin:4px auto 0}.samples-ready h1{font-size:38px}.samples-lede{font-size:15px}.samples-download{width:100%}.samples-next{grid-template-columns:1fr;gap:24px}.samples-next-actions .button{width:100%}}
+.samples-auto{font-size:14px;font-weight:600;color:var(--teal);margin:-4px 0 14px}
+.samples-auto:before{content:'✓';margin-right:8px}

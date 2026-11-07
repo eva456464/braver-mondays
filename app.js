@@ -120,9 +120,17 @@
   window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
   // Samples pages: iPhone Safari opens PDF links in its viewer even with a download attribute.
   // Preload the PDF and point the button at a file-type copy so tapping it saves the file instead.
+  // People arrive here from the email button, so start the download straight away (once per visit);
+  // the page stays as a fallback with the button, tips and waitlist.
+  function autoDownload(a){
+    const key='bm_autodl_'+location.pathname;let done=false;
+    try{done=sessionStorage.getItem(key)==='1';sessionStorage.setItem(key,'1');}catch{}
+    if(done)return;
+    a.click();$('#samples-auto').hidden=false;
+  }
   $$('a.samples-download[download]').forEach(a=>{
     if(!window.fetch||!window.URL?.createObjectURL)return;
-    fetch(a.getAttribute('href')).then(r=>r.ok?r.blob():Promise.reject()).then(b=>{a.href=URL.createObjectURL(new Blob([b],{type:'application/octet-stream'}));}).catch(()=>{});
+    fetch(a.getAttribute('href')).then(r=>r.ok?r.blob():Promise.reject()).then(b=>{a.href=URL.createObjectURL(new Blob([b],{type:'application/octet-stream'}));autoDownload(a);}).catch(()=>{});
   });
   // Contact form: messages go to us through Web3Forms, so no email address is shown on the site.
   // Links stay hidden until an access key is set in site-config.json.
