@@ -118,6 +118,28 @@
   });
   // Coming back from Kit's page with the Back button: make the form usable again.
   window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
+  // Contact form: messages go to us through Web3Forms, so no email address is shown on the site.
+  // Links stay hidden until an access key is set in site-config.json.
+  const contactReady=()=>!!(config?.contactForm?.accessKey&&config.contactForm.endpoint);
+  function setupContact(){const on=contactReady();$$('[data-contact]').forEach(b=>b.hidden=!on);$('#success-help').hidden=!on;}
+  function openContact(topic,email){
+    const f=$('#contact-form');f.reset();$('#contact-start').hidden=false;$('#contact-done').hidden=true;$('#contact-status').textContent='';
+    if(topic)$('#contact-topic').value=topic;if(email)$('#contact-email').value=email;
+    openDialog('#contact-dialog');
+  }
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-contact]');if(!b)return;e.preventDefault();openContact(b.dataset.topic,b.dataset.topic==='samples'?$('#success-email').textContent:'');});
+  $('#contact-form').addEventListener('submit',async e=>{
+    e.preventDefault();const f=e.target;
+    if(!contactReady()){$('#contact-status').textContent='The contact form is being connected. Please try again soon.';return;}
+    const btn=$('#contact-submit'),label=btn.textContent,d=Object.fromEntries(new FormData(f)),topic=$('#contact-topic').selectedOptions[0].textContent;
+    btn.disabled=true;btn.textContent='Sending…';$('#contact-status').textContent='';
+    try{
+      const j=await (await fetch(config.contactForm.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:config.contactForm.accessKey,subject:`Braver Mondays website: ${topic}`,from_name:'Braver Mondays website',name:d.name||'(not given)',email:d.email,topic,message:d.message,page:location.pathname,botcheck:d.botcheck||''})})).json();
+      if(j.success){$('#contact-start').hidden=true;$('#contact-done').hidden=false;$('#contact-done-title').focus({preventScroll:true});}
+      else $('#contact-status').textContent='Sorry, that didn’t send. Please try again in a moment.';
+    }catch{$('#contact-status').textContent='Sorry, that didn’t send. Please check your connection and try again.';}
+    btn.disabled=false;btn.textContent=label;
+  });
   function renderTestimonials(){const container=$('#testimonial-quotes');if(!container)return;container.replaceChildren();(config.testimonials||[]).filter(t=>t.approved&&t.quote&&t.name).forEach(t=>{const figure=document.createElement('figure'),quote=document.createElement('blockquote'),caption=document.createElement('figcaption');quote.textContent=t.quote;caption.textContent=t.name+(t.role?' · '+t.role:'');figure.append(quote,caption);container.append(figure);});$('#testimonials').hidden=!container.childElementCount;}
   // Purchase is intentionally never emitted from a button or a client-controlled return URL.
   // Verified payment completion belongs to the checkout provider / server integration.
@@ -146,7 +168,7 @@
   function activateDecision(i,focus=false){decisions.forEach((b,j)=>{b.setAttribute('aria-selected',j===i);b.tabIndex=j===i?0:-1;});const d=decisionContent[i];['title','words','reason'].forEach(k=>$('#decision-'+k).textContent=d[k]);$('#decision-number').textContent='0'+(i+1);$('#decision-panel').setAttribute('aria-labelledby','decision-tab-'+i);if(focus)decisions[i].focus();}
   decisions.forEach((b,i)=>b.addEventListener('click',()=>activateDecision(i)));
   keyboardTabs(decisions,activateDecision);
-  fetch('/site-config.json', {cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration unavailable');return r.json();}).then(c=>{config=c;configureSignup();renderCatalog();renderTestimonials();if(config.metaPixelId&&!config.reviewMode){$('#cookie-banner').hidden=!!consent;startMeasurement();}}).catch(()=>{if($('#catalog-grid'))$('#catalog-grid').innerHTML='<p>Workbook details could not load. <a href="/workbooks/difficult-conversations/">Explore the first workbook</a>.</p>';});
+  fetch('/site-config.json', {cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Configuration unavailable');return r.json();}).then(c=>{config=c;configureSignup();setupContact();renderCatalog();renderTestimonials();if(config.metaPixelId&&!config.reviewMode){$('#cookie-banner').hidden=!!consent;startMeasurement();}}).catch(()=>{if($('#catalog-grid'))$('#catalog-grid').innerHTML='<p>Workbook details could not load. <a href="/workbooks/difficult-conversations/">Explore the first workbook</a>.</p>';});
   if('IntersectionObserver'in window){if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-motion');const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}}),{threshold:.08});$$('.reveal').forEach(el=>observer.observe(el));}const sticky=$('#mobile-purchase'),cta=$('.hero-actions');
     if(sticky&&cta){
       let pastHero=false,offerVisible=false,footerVisible=false;
