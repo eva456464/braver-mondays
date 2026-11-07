@@ -118,6 +118,26 @@
   });
   // Coming back from Kit's page with the Back button: make the form usable again.
   window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
+  // Home hero: tap a workbook cover or its name to bring it to the front. Until someone does,
+  // the covers rotate gently on their own (not for people who prefer reduced motion).
+  const coverStack=$('.cover-stack');
+  if(coverStack){
+    const covers=$$('.cover',coverStack),chips=$$('.cover-chips button'),ids=covers.map(c=>c.dataset.cover);
+    let current=0,timer=null;
+    const stopAuto=()=>{clearInterval(timer);timer=null;};
+    function showCover(i){
+      current=i;const c=covers[i];
+      covers.forEach((el,j)=>{const pos=(j-i+3)%3;el.classList.toggle('slot-front',pos===0);el.classList.toggle('slot-right',pos===1);el.classList.toggle('slot-left',pos===2);el.setAttribute('aria-pressed',pos===0);});
+      chips.forEach(b=>{const on=b.dataset.cover===c.dataset.cover;b.classList.toggle('is-active',on);b.setAttribute('aria-pressed',on);});
+      $('#cover-title').textContent=c.dataset.title;$('#cover-line').textContent=c.dataset.line;$('#cover-sample').dataset.emailSample=c.dataset.cover;
+    }
+    covers.forEach((c,i)=>c.addEventListener('click',()=>{stopAuto();showCover(i);}));
+    chips.forEach(b=>b.addEventListener('click',()=>{stopAuto();showCover(ids.indexOf(b.dataset.cover));}));
+    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+      timer=setInterval(()=>showCover((current+1)%covers.length),4500);
+      coverStack.closest('figure').addEventListener('pointerenter',stopAuto,{once:true});
+    }
+  }
   // Samples pages: iPhone Safari opens PDF links in its viewer even with a download attribute.
   // Preload the PDF and point the button at a file-type copy so tapping it saves the file instead.
   // People arrive here from the email button, so start the download straight away (once per visit);

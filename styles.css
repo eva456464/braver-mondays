@@ -206,3 +206,24 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .inside-cta{text-align:center;margin-top:44px}
 @media(max-width:760px){.home-method .method-steps{grid-template-columns:1fr;gap:14px}.home-method .method-steps li{padding:20px;display:grid;grid-template-columns:56px 1fr;column-gap:16px;align-items:center}.home-method .method-icon{margin:0;grid-row:span 2}.inside-gallery{grid-template-columns:1fr;gap:28px}.inside-gallery figure a{rotate:none}.choice-actions .button{width:100%}.inside-cta .button{width:100%}}
 @media(prefers-reduced-motion:reduce){.inside-gallery a{transition:none}.inside-gallery a:hover{translate:none}}
+
+/* Home hero: interactive stack of the three workbook covers (the cards below use the illustrations). */
+.hero-covers .cover-stack{position:relative;aspect-ratio:1.5;margin:2% 5% 0;isolation:isolate}
+.hero-covers .cover-stack:before{content:'';position:absolute;inset:10% 6% -2% 6%;background:var(--mint);border-radius:50%;z-index:-1}
+.hero-covers .cover{position:absolute;width:76%;padding:0;border:1px solid #e5e1d7;border-radius:3px;background:#fff;cursor:pointer;box-shadow:0 14px 34px #2037382e,0 2px 6px #2037381f;transition:left .55s ease,top .55s ease,rotate .55s ease,translate .2s}
+.hero-covers .cover img{width:100%;height:auto;max-height:none;object-fit:initial;mix-blend-mode:normal;display:block;border-radius:2px}
+.hero-covers .slot-front{left:12%;top:20%;rotate:-1.5deg;z-index:3}
+.hero-covers .slot-left{left:0;top:4%;rotate:-8deg;z-index:1}
+.hero-covers .slot-right{left:24%;top:0;rotate:7deg;z-index:2}
+.hero-covers .cover:not(.slot-front):hover{translate:0 -6px}
+.hero-covers .cover:focus-visible{outline:3px solid #b9523b;outline-offset:3px}
+.cover-chips{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:18px}
+.cover-chips button{font-size:13px;font-weight:600;padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);transition:background .2s,color .2s,border-color .2s}
+.cover-chips button:hover{border-color:var(--teal)}
+.cover-chips button.is-active{background:var(--teal);border-color:var(--teal);color:#fff}
+.hero-covers .cover-caption{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;margin-top:12px;font:inherit}
+.cover-caption strong{font:italic 19px/1.3 var(--serif);color:var(--teal)}
+.cover-caption span{font-size:13px;color:var(--muted)}
+.cover-caption .text-button{font-size:13px;color:var(--teal);margin-top:4px}
+@media(max-width:760px){.hero-covers{max-width:360px;margin:6px auto 0}.hero-covers .cover-stack{margin:2% 2% 0}.cover-caption strong{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.hero-covers .cover,.cover-chips button{transition:none}}
