@@ -118,6 +118,12 @@
   });
   // Coming back from Kit's page with the Back button: make the form usable again.
   window.addEventListener('pageshow',e=>{if(e.persisted&&$('#email-dialog').open)configureSignup();});
+  // Samples pages: iPhone Safari opens PDF links in its viewer even with a download attribute.
+  // Preload the PDF and point the button at a file-type copy so tapping it saves the file instead.
+  $$('a.samples-download[download]').forEach(a=>{
+    if(!window.fetch||!window.URL?.createObjectURL)return;
+    fetch(a.getAttribute('href')).then(r=>r.ok?r.blob():Promise.reject()).then(b=>{a.href=URL.createObjectURL(new Blob([b],{type:'application/octet-stream'}));}).catch(()=>{});
+  });
   // Contact form: messages go to us through Web3Forms, so no email address is shown on the site.
   // Links stay hidden until an access key is set in site-config.json.
   const contactReady=()=>!!(config?.contactForm?.accessKey&&config.contactForm.endpoint);

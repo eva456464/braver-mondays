@@ -154,3 +154,26 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .hp-field{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
 .success-help{font-size:12px;margin-top:6px;color:var(--muted)}
 .success-help .text-button{font-size:12px;color:var(--teal)}
+
+/* "Your samples are ready" pages (/samples/...), where Kit sends people after they confirm. */
+.samples-ready{display:grid;grid-template-columns:1.05fr .95fr;gap:7%;align-items:center;padding-top:64px;padding-bottom:72px}
+.samples-ready h1{font-size:clamp(40px,4.4vw,62px);margin-bottom:20px}
+.samples-lede{font-size:17px;line-height:1.6;max-width:520px;margin-bottom:28px}
+.samples-lede strong{color:var(--ink)}
+.samples-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-bottom:16px}
+.samples-download{min-height:60px;padding:16px 28px;font-size:16px;gap:12px}
+.samples-download svg{width:22px;height:22px;flex-shrink:0}
+.samples-open{font-size:14px;color:var(--teal);text-underline-offset:5px}
+.samples-tip{font-size:13px;line-height:1.55;max-width:520px;background:var(--butter);border-radius:8px;padding:12px 16px;color:var(--ink);margin-bottom:30px}
+.samples-list-title{font:600 15px/1.3 var(--sans);letter-spacing:0;color:var(--ink);margin-bottom:12px}
+.samples-list{margin-bottom:16px}
+.samples-bring{font-size:14px}
+.samples-cover{margin:0;position:relative}
+.samples-cover:before{content:'';position:absolute;inset:8% -6% -6% 8%;background:var(--mint);border-radius:50%;z-index:-1}
+.samples-cover img{width:100%;transform:rotate(-3deg);box-shadow:0 18px 40px #20373830,0 2px 6px #2037381f;border:1px solid #e5e1d7}
+.samples-next{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:center;background:#f1eee4;border-block:1px solid #ccd7cc;padding-top:56px;padding-bottom:56px}
+.samples-next h2{margin:10px 0 16px;font-size:clamp(32px,3.2vw,46px)}
+.samples-next p:not(.eyebrow){max-width:560px}
+.samples-next-actions{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.samples-next-actions a{font-size:14px;color:var(--teal);text-underline-offset:5px}
+@media(max-width:760px){.samples-ready{grid-template-columns:1fr;gap:36px;padding-top:36px;padding-bottom:48px}.samples-cover{max-width:380px;margin:4px auto 0}.samples-ready h1{font-size:38px}.samples-lede{font-size:15px}.samples-download{width:100%}.samples-next{grid-template-columns:1fr;gap:24px}.samples-next-actions .button{width:100%}}
