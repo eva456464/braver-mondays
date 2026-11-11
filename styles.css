@@ -227,3 +227,27 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .cover-caption .text-button{font-size:13px;color:var(--teal);margin-top:4px}
 @media(max-width:760px){.hero-covers{max-width:360px;margin:6px auto 0}.hero-covers .cover-stack{margin:2% 2% 0}.cover-caption strong{font-size:17px}}
 @media(prefers-reduced-motion:reduce){.hero-covers .cover,.cover-chips button{transition:none}}
+
+/* Focused usability improvements, preserving the existing palette and layout. */
+.sample-fab.samples-in-view{display:none}
+.eyebrow,.home-hero-copy .eyebrow,.hero-copy .eyebrow{font-size:11px;letter-spacing:1.1px}
+.small,.home-need-routes small,.home-compare,.tile-status,.tile-format,.catalog-note,.sample-foot p,.signup-legal,.success-help{font-size:13px!important;color:var(--muted);line-height:1.6}
+.footer-bottom,.footer-bottom a,.footer-bottom button{font-size:13px;line-height:1.6}
+.home-need-routes>p{font-size:11px}.review-banner{font-size:12px}
+.workbook-comparison .home-choice-art{height:150px;aspect-ratio:auto}.workbook-comparison .home-choice-art img{height:100%;object-fit:cover}
+.workbook-comparison .home-choice h2{font-size:25px;min-height:60px}.workbook-comparison .choice-outcome{min-height:70px;margin-bottom:10px}
+.comparison-need{font-weight:700;color:var(--ink);font-size:14px;margin:14px 0 8px}.comparison-format{font-size:13px;margin-bottom:20px}
+.worksheet-zoom{display:block;width:100%;padding:0;background:var(--mint);text-align:left;border:1px solid var(--line);border-radius:4px;overflow:hidden}.worksheet-zoom span{display:block;padding:12px 16px;font-size:14px;font-weight:600;color:var(--teal)}
+.worksheet-zoom img,.preview-panel img,#sample-image,.inside-gallery img{background:#e4eae3;min-height:100px}
+.preview-panel,.value-worksheet,.inside-gallery figure{background-color:#edf0e8}
+.sample-dialog{width:min(1100px,calc(100vw - 24px));max-width:1100px;max-height:94dvh;overflow:auto}.sample-dialog #sample-image{width:100%;height:auto}.sample-foot{position:sticky;bottom:0;background:var(--paper);padding:16px 0;margin-bottom:0}.sample-foot .text-button{font-weight:700;font-size:15px;color:var(--teal)}
+.mobile-details>summary{display:none}.mobile-details-content>section{margin:0}
+@media(max-width:760px){
+ .sample-fab{display:none!important}footer{padding-bottom:36px}
+ .home-hero-copy .eyebrow,.hero-copy .eyebrow{font-size:11px}.home-need-routes small{font-size:13px}.home-compare{font-size:13px}.review-banner{font-size:11px}
+ .workbook-comparison{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:20px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:16px}.workbook-comparison .home-choice{scroll-snap-align:start}.workbook-comparison .home-choice h2{font-size:24px;min-height:84px}.workbook-comparison .choice-outcome{min-height:90px}.workbook-comparison .comparison-need{min-height:48px}.workbook-comparison .choice-actions{flex-direction:column;align-items:stretch}
+ .mobile-details{margin:0 6%;border-bottom:1px solid var(--line)}.mobile-details>summary{display:list-item;padding:20px 0;font-weight:700;font-size:16px;color:var(--teal);cursor:pointer;min-height:60px}.mobile-details-content .section-pad{padding:28px 20px}.mobile-details-content .reveal{opacity:1;transform:none}
+ .sample-dialog{padding:20px 16px}.sample-head h2{font-size:25px}.sample-foot{flex-direction:column;align-items:stretch;gap:8px}.sample-foot .text-button{min-height:48px;text-align:center}
+}
+
+.comparison-hint{display:none}@media(max-width:760px){.comparison-hint{display:block;font-size:13px;margin:0 0 16px;color:var(--muted)}}

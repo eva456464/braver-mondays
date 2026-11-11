@@ -16,12 +16,29 @@
   $$('.mobile-menu').forEach(menu=>menu.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.open=false;$('summary',menu).focus();}}));
   $$('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
   $$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const b=d.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)d.close();}}));
-  function showSample(){const s=samples[sampleIndex];$('#sample-image').src=s.image;$('#sample-image').alt=s.alt;$('#sample-caption').textContent=s.title;}
-  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>openSignup('sample',document.body.dataset.productId)));
-  $('#sample-prev').addEventListener('click',()=>{sampleIndex=(sampleIndex+samples.length-1)%samples.length;showSample();});
-  $('#sample-next').addEventListener('click',()=>{sampleIndex=(sampleIndex+1)%samples.length;showSample();});
+  function showSample(){const s=previewSamples[sampleIndex];$('#sample-image').src=s.image;$('#sample-image').alt=s.alt;$('#sample-caption').textContent=s.title;}
+  $$('[data-sample]').forEach(b=>b.addEventListener('click',()=>{previewSamples=samples;showSample();openDialog('#sample-dialog');}));
+  let previewSamples=samples;
+  $$('[data-large-preview]').forEach(b=>b.addEventListener('click',()=>{
+    const p=config?.products.find(p=>p.id===b.dataset.largePreview);if(!p)return;
+    previewSamples=p.samples;sampleIndex=previewSamples.findIndex(item=>item.image===$('img',b).getAttribute('src'));if(sampleIndex<0)sampleIndex=0;
+    const cta=$('[data-email-sample]',$('#sample-dialog'));cta.dataset.emailSample=p.id;showSample();openDialog('#sample-dialog');
+  }));
+  $('#sample-prev').addEventListener('click',()=>{sampleIndex=(sampleIndex+previewSamples.length-1)%previewSamples.length;showSample();});
+  $('#sample-next').addEventListener('click',()=>{sampleIndex=(sampleIndex+1)%previewSamples.length;showSample();});
   $('#sample-dialog').addEventListener('keydown',e=>{if(e.key==='ArrowRight'){$('#sample-next').click();e.preventDefault();}if(e.key==='ArrowLeft'){$('#sample-prev').click();e.preventDefault();}});
   $$('[data-sample-download]').forEach(a=>a.addEventListener('click',()=>track('DownloadSample',{content_name:document.body.dataset.productId+' workbook sample'},true)));
+
+  // A phone never has a floating CTA over a workbook image or action.
+  const fab=$('.sample-fab');
+  if(fab&&'IntersectionObserver' in window){const visible=new Set();const observer=new IntersectionObserver(entries=>{entries.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target));fab.classList.toggle('samples-in-view',visible.size>0);},{threshold:0});$$('[data-email-sample],[data-sample]').filter(b=>b!==fab&&!b.closest('dialog')).forEach(b=>observer.observe(b));}
+  const compactMedia=matchMedia('(max-width:760px)');
+  function compactSections(){ $$('.mobile-details').forEach(d=>d.open=!compactMedia.matches); }
+  compactSections();compactMedia.addEventListener('change',compactSections);
+  const revealHash=()=>{if(!location.hash)return;const target=document.getElementById(location.hash.slice(1));const d=target?.closest('.mobile-details');if(d)d.open=true;};
+  revealHash();window.addEventListener('hashchange',revealHash);
+  $$('img').forEach(img=>{const loaded=()=>img.classList.add('image-ready');img.addEventListener('load',loaded);if(img.complete&&img.naturalWidth)loaded();});
+
   const previews=$$('[data-preview]');
   function activatePreview(i,focus=false){sampleIndex=i;previews.forEach((b,j)=>{b.setAttribute('aria-selected',j===i);b.tabIndex=j===i?0:-1;});const s=samples[i];$('#preview-image').src=s.image;$('#preview-image').alt=s.alt;$('#preview-panel').setAttribute('aria-labelledby',`preview-tab-${i}`);if(focus)previews[i].focus();}
   previews.forEach((b,i)=>b.addEventListener('click',()=>activatePreview(i)));
@@ -129,7 +146,7 @@
       current=i;const c=covers[i];
       covers.forEach((el,j)=>{const pos=(j-i+3)%3;el.classList.toggle('slot-front',pos===0);el.classList.toggle('slot-right',pos===1);el.classList.toggle('slot-left',pos===2);el.setAttribute('aria-pressed',pos===0);});
       chips.forEach(b=>{const on=b.dataset.cover===c.dataset.cover;b.classList.toggle('is-active',on);b.setAttribute('aria-pressed',on);});
-      $('#cover-title').textContent=c.dataset.title;$('#cover-line').textContent=c.dataset.line;$('#cover-sample').dataset.emailSample=c.dataset.cover;
+      $('#cover-title').textContent=c.dataset.title;$('#cover-line').textContent=c.dataset.line;$('#cover-waitlist').dataset.waitlist=c.dataset.cover;
     }
     covers.forEach((c,i)=>c.addEventListener('click',()=>{stopAuto();showCover(i);}));
     chips.forEach(b=>b.addEventListener('click',()=>{stopAuto();showCover(ids.indexOf(b.dataset.cover));}));
