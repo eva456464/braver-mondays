@@ -253,3 +253,7 @@ dialog h2[tabindex="-1"]:focus{outline:none}
 .comparison-hint{display:none}@media(max-width:760px){.comparison-hint{display:block;font-size:13px;margin:0 0 16px;color:var(--muted)}}
 
 .hero-reassurance{font-size:14px;line-height:1.6;max-width:520px;margin:0 0 22px;color:var(--muted)}.before-after{background:var(--mint)}.before-after-grid{display:grid;grid-template-columns:1fr 1fr;gap:8%;margin-top:36px}.before-after-grid h3{font-size:21px;margin-bottom:12px}.before-after-grid p{max-width:500px}.before-after-note{max-width:780px;margin:28px 0 24px}.workbook-comparison .choice-outcome{min-height:100px}@media(max-width:760px){.hero-reassurance{font-size:14px}.before-after-grid{grid-template-columns:1fr;gap:28px}.before-after-grid h3{font-size:20px}.workbook-comparison .choice-outcome{min-height:120px}.home-hero h1{font-size:38px}}
+
+/* Shared floating samples action: only visible away from other signup controls. */
+.sample-fab:not([hidden]){display:inline-flex!important}
+body:has(dialog[open]) .sample-fab,body:has(#cookie-banner:not([hidden])) .sample-fab{display:none!important}

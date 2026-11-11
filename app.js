@@ -29,9 +29,13 @@
   $('#sample-dialog').addEventListener('keydown',e=>{if(e.key==='ArrowRight'){$('#sample-next').click();e.preventDefault();}if(e.key==='ArrowLeft'){$('#sample-prev').click();e.preventDefault();}});
   $$('[data-sample-download]').forEach(a=>a.addEventListener('click',()=>track('DownloadSample',{content_name:document.body.dataset.productId+' workbook sample'},true)));
 
-  // A phone never has a floating CTA over a workbook image or action.
+  // Keep samples in reach without competing with an on-screen signup action.
   const fab=$('.sample-fab');
-  if(fab&&'IntersectionObserver' in window){const visible=new Set();const observer=new IntersectionObserver(entries=>{entries.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target));fab.classList.toggle('samples-in-view',visible.size>0);},{threshold:0});$$('[data-email-sample],[data-sample]').filter(b=>b!==fab&&!b.closest('dialog')).forEach(b=>observer.observe(b));}
+  if(fab&&'IntersectionObserver' in window){
+    const visible=new Set();
+    const observer=new IntersectionObserver(entries=>{entries.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target));fab.hidden=visible.size>0;},{threshold:0,rootMargin:'24px 0px 24px 0px'});
+    $$('[data-email-sample],[data-sample],[data-waitlist],footer').filter(b=>b!==fab&&!b.closest('dialog')).forEach(b=>observer.observe(b));
+  }
   const compactMedia=matchMedia('(max-width:760px)');
   function compactSections(){ $$('.mobile-details').forEach(d=>d.open=!compactMedia.matches); }
   compactSections();compactMedia.addEventListener('change',compactSections);
