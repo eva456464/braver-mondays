@@ -58,7 +58,7 @@
     $('#sample-field').hidden=!choosing;$('#sample-field').disabled=!choosing;
     $('#email-eyebrow').textContent=sample?'FREE SAMPLES':'JOIN THE LAUNCH WAITLIST';
     $('#email-title').textContent=sample?'Get 3 free samples by email.':(p?'Be first to get the full workbook.':'Be first to get the full workbooks.');
-    $('#email-workshop').textContent=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):'Each workbook is a self-guided PDF. Bring one real situation and work through it step by step, in about an hour.';
+    $('#email-workshop').textContent=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):'Launching at US$19 per workbook, or all three for US$59. Each is a self-guided PDF to work through in about an hour. Join free; no payment is collected.';
     // Show what the visitor gets: the workbook cover and what's in it.
     const item=p||(!sample&&selectedTopic==='bundle'?config?.bundle:null),summary=$('#sample-summary');
     summary.hidden=!item||choosing;
@@ -155,7 +155,7 @@
   // Contact form: messages go to us through Web3Forms, so no email address is shown on the site.
   // Links stay hidden until an access key is set in site-config.json.
   const contactReady=()=>!!(config?.contactForm?.accessKey&&config.contactForm.endpoint);
-  function setupContact(){const on=contactReady();$$('[data-contact]').forEach(b=>b.hidden=!on);$('#success-help').hidden=!on;}
+  function setupContact(){const on=contactReady(),email=config?.businessEmail;$$('[data-contact]').forEach(b=>{if(!on&&email){const a=document.createElement('a');a.href='mailto:'+email;a.className=b.className;a.textContent=b.textContent;b.replaceWith(a);}else b.hidden=!on;});$('#success-help').hidden=!(on||email);}
   function openContact(topic,email){
     const f=$('#contact-form');f.reset();$('#contact-start').hidden=false;$('#contact-done').hidden=true;$('#contact-status').textContent='';
     if(topic)$('#contact-topic').value=topic;if(email)$('#contact-email').value=email;
@@ -181,7 +181,7 @@
   function startMeasurement(){if(!config?.metaPixelId||config.reviewMode||consent!=='granted'||!/^\d{5,25}$/.test(config.metaPixelId))return;if(!pixelReady){const n=window.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments);};n.push=n;n.loaded=true;n.version='2.0';n.queue=[];window._fbq=n;window.fbq('consent','grant');window.fbq('init',config.metaPixelId);const s=document.createElement('script');s.async=true;s.src='https://connect.facebook.net/en_US/fbevents.js';document.head.append(s);pixelReady=true;}else window.fbq('consent','grant');if(!pageTracked){track('PageView');if(document.body.dataset.page==='product'){const p=currentProduct();track('ViewContent',{content_ids:[p.id],content_type:'product',content_name:p.title,value:p.price,currency:p.currency});}pageTracked=true;}}
   function saveConsent(value){consent=value;try{localStorage.setItem('bravermondays_consent_v1',JSON.stringify({value,at:Date.now()}));}catch{}$('#cookie-banner').hidden=true;if($('#cookie-dialog').open)$('#cookie-dialog').close();if(value==='granted')startMeasurement();else if(pixelReady)window.fbq('consent','revoke');}
   $$('[data-consent]').forEach(b=>b.addEventListener('click',()=>saveConsent(b.dataset.consent)));
-  $$('[data-cookie-settings]').forEach(b=>b.addEventListener('click',()=>{const enabled=config?.metaPixelId&&!config.reviewMode;$('#cookie-explanation').textContent=enabled?'Optional advertising measurement helps us understand visits and workbook interest. It stays off unless you allow it. Your choice is saved on this device.':'Advertising tracking is not active in this preview. Your choice is saved on this device.';openDialog('#cookie-dialog');}));
+  $$('[data-cookie-settings]').forEach(b=>b.addEventListener('click',()=>{const enabled=config?.metaPixelId&&!config.reviewMode;$('#cookie-explanation').textContent=enabled?'Optional advertising measurement helps us understand visits and workbook interest. It stays off unless you allow it. Your choice is saved on this device.':'Optional advertising tracking is currently off. Your choice is saved on this device.';openDialog('#cookie-dialog');}));
   const angle=new URLSearchParams(location.search).get('angle');
   const angles={'missed-deadline':'A missed deadline needs a conversation. Find words that address the impact and leave room to understand what happened.','former-peer':'Leading people who used to be your peers? Prepare a conversation that makes expectations clear and leaves room for their view.','workload':'Another priority, the same team. Prepare to explain the capacity gap and ask for a decision you can work with.'};
   if(angles[angle]&&$('#campaign-intro')){$('#campaign-intro').textContent=angles[angle];activateMoment({'missed-deadline':0,'former-peer':1,'workload':2}[angle]);}

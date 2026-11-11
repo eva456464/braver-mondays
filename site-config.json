@@ -1,49 +1,11 @@
 {
   "brand": "Braver Mondays",
   "origin": "https://bravermondays.com",
-  "reviewMode": true,
-  "businessEmail": "",
+  "reviewMode": false,
+  "businessEmail": "hello@bravermondays.com",
   "legalBusinessName": "",
   "metaPixelId": "",
   "products": [
-    {
-      "id": "difficult-conversations",
-      "title": "Prepare Your Next Difficult Conversation",
-      "category": "Communication",
-      "status": "launch",
-      "description": "Find your opening, make room for another perspective and agree a next step.",
-      "price": 19,
-      "currency": "USD",
-      "duration": "About 60 minutes working independently",
-      "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-difficult-conversations",
-      "path": "/workbooks/difficult-conversations/",
-      "image": "/assets/workbook-01.webp",
-      "workbookPages": 20,
-      "guidePages": 11,
-      "checkoutHeading": "Your conversation starts here.",
-      "samplePdf": "/assets/difficult-conversation-sample.pdf",
-      "samples": [
-        {
-          "image": "/assets/workbook-04.webp",
-          "title": "1 of 3 · Separate facts from assumptions",
-          "alt": "Separate facts from assumptions"
-        },
-        {
-          "image": "/assets/workbook-08.webp",
-          "title": "2 of 3 · Build your opening in four parts",
-          "alt": "Build your opening in four parts"
-        },
-        {
-          "image": "/assets/workbook-15.webp",
-          "title": "3 of 3 · Your one-page conversation plan",
-          "alt": "Your one-page conversation plan"
-        }
-      ],
-      "standardPrice": 29,
-      "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-conversation-sample",
-      "checkoutEnabled": false,
-      "sampleEnabled": false
-    },
     {
       "id": "workweek",
       "title": "Plan a More Manageable Workweek",
@@ -63,17 +25,17 @@
       "samples": [
         {
           "image": "/assets/workweek-05.webp",
-          "title": "1 of 3 · Find your real capacity",
+          "title": "1 of 3 \u00b7 Find your real capacity",
           "alt": "Find your real capacity"
         },
         {
           "image": "/assets/workweek-15.webp",
-          "title": "2 of 3 · Draft your workload discussion",
+          "title": "2 of 3 \u00b7 Draft your workload discussion",
           "alt": "Draft your workload discussion"
         },
         {
           "image": "/assets/workweek-23.webp",
-          "title": "3 of 3 · Your one-page weekly plan",
+          "title": "3 of 3 \u00b7 Your one-page weekly plan",
           "alt": "Your one-page weekly plan"
         }
       ],
@@ -101,22 +63,60 @@
       "samples": [
         {
           "image": "/assets/delegation-07.webp",
-          "title": "1 of 3 · Make decision boundaries visible",
+          "title": "1 of 3 \u00b7 Make decision boundaries visible",
           "alt": "Make decision boundaries visible"
         },
         {
           "image": "/assets/delegation-18.webp",
-          "title": "2 of 3 · Your one-page delegation brief",
+          "title": "2 of 3 \u00b7 Your one-page delegation brief",
           "alt": "Your one-page delegation brief"
         },
         {
           "image": "/assets/delegation-19.webp",
-          "title": "3 of 3 · Your check-in and ownership plan",
+          "title": "3 of 3 \u00b7 Your check-in and ownership plan",
           "alt": "Your check-in and ownership plan"
         }
       ],
       "standardPrice": 29,
       "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-delegation-sample",
+      "checkoutEnabled": false,
+      "sampleEnabled": false
+    },
+    {
+      "id": "difficult-conversations",
+      "title": "Prepare Your Next Difficult Conversation",
+      "category": "Communication",
+      "status": "launch",
+      "description": "Find your opening, make room for another perspective and agree a next step.",
+      "price": 19,
+      "currency": "USD",
+      "duration": "About 60 minutes working independently",
+      "checkoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-difficult-conversations",
+      "path": "/workbooks/difficult-conversations/",
+      "image": "/assets/workbook-01.webp",
+      "workbookPages": 20,
+      "guidePages": 11,
+      "checkoutHeading": "Your conversation starts here.",
+      "samplePdf": "/assets/difficult-conversation-sample.pdf",
+      "samples": [
+        {
+          "image": "/assets/workbook-04.webp",
+          "title": "1 of 3 \u00b7 Separate facts from assumptions",
+          "alt": "Separate facts from assumptions"
+        },
+        {
+          "image": "/assets/workbook-08.webp",
+          "title": "2 of 3 \u00b7 Build your opening in four parts",
+          "alt": "Build your opening in four parts"
+        },
+        {
+          "image": "/assets/workbook-15.webp",
+          "title": "3 of 3 \u00b7 Your one-page conversation plan",
+          "alt": "Your one-page conversation plan"
+        }
+      ],
+      "standardPrice": 29,
+      "sampleCheckoutUrl": "https://ogorodnic4.gumroad.com/l/braver-mondays-conversation-sample",
       "checkoutEnabled": false,
       "sampleEnabled": false
     }
