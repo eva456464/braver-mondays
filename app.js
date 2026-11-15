@@ -79,7 +79,7 @@
     $('#sample-field').hidden=!choosing;$('#sample-field').disabled=!choosing;
     $('#email-eyebrow').textContent=sample?'FREE SAMPLES':'JOIN THE LAUNCH WAITLIST';
     $('#email-title').textContent=sample?'Get 3 free samples by email.':(p?'Be first to get the full workbook.':'Be first to get the full workbooks.');
-    $('#email-workshop').innerHTML=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):'Launching at $19 per workbook. All three: <span class="collection-price"><s aria-label="Three single workbooks cost 57 dollars">$57</s> <strong>$35</strong></span> — Save $22 when you get all 3. Each is a self-guided PDF to work through in about an hour. Join free; no payment is collected.';
+    $('#email-workshop').innerHTML=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):`<span class="launch-pricing"><span class="launch-pricing-label">ALL 3 WORKBOOKS · LAUNCH PRICE</span><span class="launch-pricing-main"><strong class="launch-pricing-amount">$35</strong><span class="launch-pricing-saving">Save $22</span></span><span class="launch-pricing-comparison">Bought separately: <s aria-label="57 dollars">$57</s> <span>($19 each)</span></span></span><span class="launch-pricing-note">One workbook: <strong>$19.</strong> Join free; no payment today.</span>`;
     // Show what the visitor gets: the workbook cover and what's in it.
     const item=p||(!sample&&selectedTopic==='bundle'?config?.bundle:null),summary=$('#sample-summary');
     summary.hidden=!item||choosing;
