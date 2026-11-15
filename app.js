@@ -79,7 +79,7 @@
     $('#sample-field').hidden=!choosing;$('#sample-field').disabled=!choosing;
     $('#email-eyebrow').textContent=sample?'FREE SAMPLES':'JOIN THE LAUNCH WAITLIST';
     $('#email-title').textContent=sample?'Get 3 free samples by email.':(p?'Be first to get the full workbook.':'Be first to get the full workbooks.');
-    $('#email-workshop').textContent=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):'Launching at US$19 per workbook, or all three for US$59. Each is a self-guided PDF to work through in about an hour. Join free; no payment is collected.';
+    $('#email-workshop').innerHTML=sample?(choosing?'Pick a workbook and try real exercises from it before it launches.':'Try real exercises from the workbook before it launches.'):'Launching at US$19 per workbook. All three: <span class="collection-price"><s aria-label="Three single workbooks cost 57 dollars">US$57</s> <strong>US$35</strong></span> — Save US$22 when you get all 3. Each is a self-guided PDF to work through in about an hour. Join free; no payment is collected.';
     // Show what the visitor gets: the workbook cover and what's in it.
     const item=p||(!sample&&selectedTopic==='bundle'?config?.bundle:null),summary=$('#sample-summary');
     summary.hidden=!item||choosing;
