@@ -261,9 +261,9 @@ body:has(dialog[open]) .sample-fab,body:has(#cookie-banner:not([hidden])) .sampl
 /* Consistent launch pricing across the website and signup dialogs. */
 .launch-pricing{display:block;color:var(--ink);text-align:left;line-height:1.4}
 .launch-pricing-label{display:block;font:700 11px/1.5 var(--sans);letter-spacing:1.3px;color:var(--teal);margin-bottom:10px}
-.launch-pricing-main{display:flex;flex-wrap:wrap;align-items:center;gap:20px}
-.launch-pricing-amount{font:400 64px/1 var(--serif);letter-spacing:-.055em;color:var(--ink)}
-.launch-pricing-saving{display:inline-block;background:var(--butter);border:1px solid #daceac;border-radius:99px;color:#334b3a;padding:7px 13px;font:700 13px/1.4 var(--sans);white-space:nowrap}
+.launch-pricing-main{display:flex;flex-wrap:wrap;align-items:center;gap:16px}
+.launch-pricing-amount{font:400 54px/1 var(--serif);letter-spacing:-.055em;color:var(--ink)}
+.launch-pricing-saving{display:inline-block;background:var(--butter);border:1px solid #daceac;border-radius:99px;color:#334b3a;padding:6px 11px;font:700 12px/1.4 var(--sans);white-space:nowrap}
 .launch-pricing-comparison{display:block;margin-top:14px;font:400 14px/1.6 var(--sans);color:var(--muted)}
 .launch-pricing-comparison s{text-decoration-thickness:1px;margin-left:3px}
 .launch-pricing-comparison>span{white-space:nowrap}
@@ -273,13 +273,18 @@ body:has(dialog[open]) .sample-fab,body:has(#cookie-banner:not([hidden])) .sampl
 .catalog-pricing{display:flex;justify-content:space-between;align-items:center;gap:32px;border-top:1px solid var(--line);padding-top:28px;margin-top:36px}
 .catalog-pricing>p{font-size:14px;line-height:1.9}
 .catalog-pricing a{display:inline-block;color:var(--teal);margin-top:6px}
-#email-workshop>.launch-pricing{background:var(--mint);padding:20px 22px;border-radius:5px;margin-top:20px}
-#email-workshop .launch-pricing-amount{font-size:58px}
+#email-workshop>.launch-pricing{background:var(--mint);padding:16px 18px;border-radius:5px;margin-top:16px}
+#email-workshop .launch-pricing-amount{font-size:48px}
 #email-workshop .launch-pricing-label{font-size:10px;letter-spacing:1.1px}
-#email-workshop .launch-pricing-comparison{font-size:13px;margin-top:12px}
+#email-workshop .launch-pricing-comparison{font-size:13px;margin-top:10px}
 @media(max-width:600px){
  .catalog-pricing{flex-direction:column;align-items:flex-start;gap:20px}
  .launch-waitlist-action>.button{width:100%;min-width:0}
- #email-workshop>.launch-pricing{padding:18px}
- #email-workshop .launch-pricing-main{gap:18px}
+ #email-workshop>.launch-pricing{padding:15px 16px}
+ #email-workshop .launch-pricing-main{gap:16px}
 }
+
+/* Slightly smaller collection pricing, matching the shared offer scale. */
+#bundle .bundle-amount{font-size:clamp(64px,6vw,80px)}
+#bundle .bundle-saving{padding:6px 12px;font-size:13px}
+@media(max-width:760px){#bundle .bundle-amount{font-size:64px}}
